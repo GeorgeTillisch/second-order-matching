@@ -1,4 +1,3 @@
-
 /**
  * This test suite is for all different kinds of matching problems, which are
  * the main purpose of this entire repository/codebase.  Thus these are the main
@@ -12,6 +11,7 @@ import {
     DEBUG_PRINT_CONSTRAINTLIST, DEBUG_PRINT_SOLS, newConstraintObject,
     newConstraints, newMC, lambdaString, newSolutions, checkSolutions
 } from './utils';
+
 const OM = M.OM;
 
 describe('The MatchingChallenge class (basic functionality)', () => {
@@ -228,7 +228,7 @@ describe('The MatchingChallenge class (solving)', () => {
         // Example 2
         constraints = newConstraints(
             ['w(w(_X,_P_of__X),for.all[x,_P_of_x])',
-             'w(w(k,lt(plus(k,1),5)),for.all[s,lt(plus(s,1),5)])'],
+                'w(w(k,lt(plus(k,1),5)),for.all[s,lt(plus(s,1),5)])'],
         );
         mc = newMC(constraints);
         sols = mc.getSolutions();
@@ -237,8 +237,8 @@ describe('The MatchingChallenge class (solving)', () => {
                 sols,
                 newSolutions(
                     [
-                       ['_X', 'k'],
-                       ['_P', lambdaString('v.lt(plus(v,1),5)')],
+                        ['_X', 'k'],
+                        ['_P', lambdaString('v.lt(plus(v,1),5)')],
                     ],
                 )
             )
@@ -247,7 +247,7 @@ describe('The MatchingChallenge class (solving)', () => {
         // Example 3
         constraints = newConstraints(
             ['w(exi.sts[x,_P_of_x],for.all[y,implies(_P_of_y,_Q)],_Q)',
-             'w(exi.sts[x,eq(cubed(x),-1)],for.all[x,implies(eq(cubed(x),-1),lt(x,5))],lt(x,5))']
+                'w(exi.sts[x,eq(cubed(x),-1)],for.all[x,implies(eq(cubed(x),-1),lt(x,5))],lt(x,5))']
         );
         mc = newMC(constraints);
         sols = mc.getSolutions();
@@ -1465,7 +1465,7 @@ describe('The MatchingChallenge class (solving)', () => {
         constraints = newConstraints(
             ['_P_of_0', 'gte(0,0)'],
             ['for.all[_k,implies(_P_of__k,SecondOrderMatching.gEFA(_P,plus(_k,1)))]',
-             'for.all[n,implies(gte(n,0),gte(plus(n,1),0))]'],
+                'for.all[n,implies(gte(n,0),gte(plus(n,1),0))]'],
             ['for.all[_n,_P_of__n]', 'for.all[n,gte(n,0)]'],
         );
         mc = newMC(constraints);
@@ -1487,7 +1487,7 @@ describe('The MatchingChallenge class (solving)', () => {
         constraints = newConstraints(
             ['_P_of_0', 'eq(plus(0,0),0)'],
             ['for.all[_k,implies(_P_of__k,SecondOrderMatching.gEFA(_P,plus(_k,1)))]',
-             'for.all[m,implies(eq(plus(m,0),m),eq(plus(plus(m,1),0),plus(m,1)))]'],
+                'for.all[m,implies(eq(plus(m,0),m),eq(plus(plus(m,1),0),plus(m,1)))]'],
             ['for.all[_n,_P_of__n]', 'for.all[k,eq(plus(k,0),k)]'],
         );
         mc = newMC(constraints);
@@ -1509,7 +1509,7 @@ describe('The MatchingChallenge class (solving)', () => {
         constraints = newConstraints(
             ['_P_of_0', 'P(0)'],
             ['for.all[_k,implies(_P_of__k,SecondOrderMatching.gEFA(_P,plus(_k,1)))]',
-             'for.all[k,implies(P(k),P(plus(k,1)))]'],
+                'for.all[k,implies(P(k),P(plus(k,1)))]'],
             ['for.all[_n,_P_of__n]', 'for.all[n,P(n)]'],
         );
         mc = newMC(constraints);
@@ -1531,7 +1531,7 @@ describe('The MatchingChallenge class (solving)', () => {
         constraints = newConstraints(
             ['_P_of_0', 'eq(7,5)'],
             ['for.all[_k,implies(_P_of__k,SecondOrderMatching.gEFA(_P,plus(_k,1)))]',
-             'for.all[n,implies(eq(7,5),eq(7,5))]'],
+                'for.all[n,implies(eq(7,5),eq(7,5))]'],
             ['for.all[_n,_P_of__n]', 'for.all[n,eq(7,5)]'],
         );
         mc = newMC(constraints);
@@ -1553,7 +1553,7 @@ describe('The MatchingChallenge class (solving)', () => {
         constraints = newConstraints(
             ['_P_of_0', 'R(n,1)'],
             ['for.all[_k,implies(_P_of__k,SecondOrderMatching.gEFA(_P,plus(_k,1)))]',
-             'for.all[m,implies(R(m,1),R(plus(m,1),1))]'],
+                'for.all[m,implies(R(m,1),R(plus(m,1),1))]'],
             ['for.all[_n,_P_of__n]', 'for.all[m,R(m,1)]'],
         );
         mc = newMC(constraints);
@@ -1564,7 +1564,7 @@ describe('The MatchingChallenge class (solving)', () => {
         constraints = newConstraints(
             ['_P_of_0', 'gte(k,0)'],
             ['for.all[_k,implies(_P_of__k,SecondOrderMatching.gEFA(_P,plus(_k,1)))]',
-             'for.all[k,implies(gte(k,k),gte(k,plus(k,1)))]'],
+                'for.all[k,implies(gte(k,k),gte(k,plus(k,1)))]'],
             ['for.all[_n,_P_of__n]', 'for.all[n,gte(n,k)]'],
         );
         mc = newMC(constraints);
@@ -1673,9 +1673,9 @@ describe('The MatchingChallenge class (solving)', () => {
                 sols,
                 newSolutions(
                     [
-                       ['_x', 'm'],
-                       ['_P', lambdaString('v.gt(v,0)')],
-                       ['_Q', 'gt(-1,0)'],
+                        ['_x', 'm'],
+                        ['_P', lambdaString('v.gt(v,0)')],
+                        ['_Q', 'gt(-1,0)'],
                     ],
                 )
             )
