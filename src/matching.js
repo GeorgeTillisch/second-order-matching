@@ -240,13 +240,13 @@ export class MatchingChallenge {
     // const tab = '\t'
     let mc = this;
     // if needed, create a brand-new solution we will evolve with recursion
-    if (mc.solutions === undefined || mc.solutions.length == 0) mc.solutions = [new ConstraintList()];
+    if (mc.solutions === undefined || mc.solutions.length === 0) mc.solutions = [new ConstraintList()];
 
     function* recur() {
       // DEBUG( indent, DEBUG_CONSTRAINTLIST( mc.challengeList ),
       //     ' --> ', DEBUG_CONSTRAINTLIST( mc.solutions[0] ) )
       // Success case occurs when the challenge list is empty
-      if (mc.challengeList.length == 0) {
+      if (mc.challengeList.length === 0) {
         // DEBUG( indent+'SUCCESS' )
         yield mc.solutions[0];
         return;
@@ -275,7 +275,7 @@ export class MatchingChallenge {
           // DEBUG( indent+'SIMPLIFICATION' )
           mc.challengeList.remove(current_constraint);
           // Do any necessary alpha conversion before breaking into argument paits
-          if (current_constraint.pattern.type == "bi" && current_constraint.expression.type == "bi") {
+          if (current_constraint.pattern.type === "bi" && current_constraint.expression.type === "bi") {
             let pattern_vars = current_constraint.pattern.variables;
             let expression_vars = current_constraint.expression.variables;
             // Get case checks number of arguments
@@ -332,7 +332,7 @@ export class MatchingChallenge {
 
           // Subcase C, the function may be more complex
           // DEBUG( indent+'EFA-3: imitation expression' )
-          if (expression.type == "a" || expression.type == "bi") {
+          if (expression.type === "a" || expression.type === "bi") {
             let temp_mc_C = mc.clone();
 
             let new_vars = current_constraint.pattern.children
@@ -341,7 +341,7 @@ export class MatchingChallenge {
 
             // Get the temporary metavariables
             let temp_metavars = [];
-            if (expression.type == "a") {
+            if (expression.type === "a") {
               temp_metavars = expression.children.map(() => {
                 let new_var = temp_mc_C.challengeList.nextNewVariable();
                 setMetavariable(new_var);

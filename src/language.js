@@ -49,7 +49,7 @@ export function isMetavariable(variable) {
   return (
     variable instanceof OM &&
     ["v", "sy"].includes(variable.type) &&
-    variable.getAttribute(metavariableSymbol) != undefined &&
+    variable.getAttribute(metavariableSymbol) !== undefined &&
     variable.getAttribute(metavariableSymbol).equals(trueValue)
   );
 }
@@ -89,7 +89,7 @@ all elements of first argument must have type variable";
  * @param {OM} expression - the expression to be checked
  */
 export function isGeneralExpressionFunction(expression) {
-  return expression instanceof OM && expression.type == "bi" && expression.symbol.equals(generalExpressionFunction);
+  return expression instanceof OM && expression.type === "bi" && expression.symbol.equals(generalExpressionFunction);
 }
 
 /**
@@ -223,9 +223,9 @@ export function replaceWithoutCapture(expr, variable, replacement) {
   if (!(expr instanceof OM) || !(variable instanceof OM) || !(replacement instanceof OM)) {
     throw "all arguments must be instances of OMNode";
   }
-  if (expr.type != "bi") {
+  if (expr.type !== "bi") {
     // Case 1: expr is a variable that we must replace, so do it
-    if (expr.type == "v" && expr.equals(variable)) {
+    if (expr.type === "v" && expr.equals(variable)) {
       expr.replaceWith(replacement.copy());
       // Case 2: expr is any other non-binding, so recur on its
       // children (of which there may be none, meaning this is some
@@ -243,7 +243,7 @@ export function replaceWithoutCapture(expr, variable, replacement) {
       // Case 3: expr is a binding and it binds the variable to be replaced,
       // but the replacement is a non-variable.  This is illegal, because
       // OpenMath bound variable positions can be occupied only by variables.
-      if (replacement.type != "v") {
+      if (replacement.type !== "v") {
         throw "Cannot replace a bound variable with a non-varible";
         // Case 4: expr is a binding and it binds the variable to be replaced,
         // and the replacement is also a variable.  We can go ahead and replace
@@ -287,16 +287,16 @@ export function replaceWithoutCapture(expr, variable, replacement) {
  */
 export function alphaEquivalent(expr1, expr2, firstcall = true) {
   var possible_types = ["a", "bi"];
-  if (expr1.type != expr2.type) {
+  if (expr1.type !== expr2.type) {
     return false;
   }
   if (firstcall && (!possible_types.includes(expr1.type) || !possible_types.includes(expr2.type))) {
     return false;
   }
-  if (expr1.type == "a") {
+  if (expr1.type === "a") {
     var expr1_children = expr1.children;
     var expr2_children = expr2.children;
-    if (expr1_children.length != expr2_children.length) {
+    if (expr1_children.length !== expr2_children.length) {
       return false;
     }
     for (let i = 0; i < expr1_children.length; i++) {
@@ -307,8 +307,8 @@ export function alphaEquivalent(expr1, expr2, firstcall = true) {
       }
     }
     return true;
-  } else if (expr1.type == "bi") {
-    if (expr1.variables.length != expr2.variables.length || !expr1.symbol.equals(expr2.symbol)) {
+  } else if (expr1.type === "bi") {
+    if (expr1.variables.length !== expr2.variables.length || !expr1.symbol.equals(expr2.symbol)) {
       return false;
     }
     // Alpha convert all bound variables in both expressions to
@@ -347,7 +347,7 @@ export function betaReduce(gEF, expr_list) {
   if (!(expr_list instanceof Array)) {
     throw "In beta reduction,, the second argument must be a list of expressions";
   }
-  if (gEF.variables.length != expr_list.length) {
+  if (gEF.variables.length !== expr_list.length) {
     throw "In beta reduction, the number of expressions must match number of variables";
   }
 
@@ -383,7 +383,7 @@ export function checkVariable(variable, nextNewVariableIndex) {
  */
 export function getVariablesIn(expression) {
   return expression.descendantsSatisfying((d) => {
-    return d.type == "v";
+    return d.type === "v";
   });
 }
 
@@ -454,9 +454,9 @@ export function makeImitationExpression(variables, expr, temp_metavars) {
       let temp_metavar = temp_metavars[i];
       args.push(makeGeneralExpressionFunctionApplication(temp_metavar, bound_vars));
     }
-    if (type == "a") {
+    if (type === "a") {
       return OM.app(...args);
-    } else if (type == "bi") {
+    } else if (type === "bi") {
       return OM.bin(head, ...binding_variables, ...args);
     }
   }
@@ -468,11 +468,11 @@ export function makeImitationExpression(variables, expr, temp_metavars) {
     imitationExpr = makeGeneralExpressionFunction(
       variables,
       createBody(
-        type == "a" ? expr.children[0] : expr.symbol,
+        type === "a" ? expr.children[0] : expr.symbol,
         variables,
         temp_metavars,
         type,
-        type == "bi" ? expr.variables : null,
+        type === "bi" ? expr.variables : null,
       ),
     );
   }

@@ -145,14 +145,14 @@ export class Constraint {
     } else if (isMetavariable(pattern)) {
       return CASES.BINDING;
     } else if (
-      (pattern.type == "a" &&
+      (pattern.type === "a" &&
         !isGeneralExpressionFunctionApplication(pattern) &&
-        expression.type == "a" &&
-        pattern.children.length == expression.children.length) ||
-      (pattern.type == "bi" &&
-        expression.type == "bi" &&
+        expression.type === "a" &&
+        pattern.children.length === expression.children.length) ||
+      (pattern.type === "bi" &&
+        expression.type === "bi" &&
         pattern.symbol.equals(expression.symbol) &&
-        pattern.variables.length == expression.variables.length)
+        pattern.variables.length === expression.variables.length)
     ) {
       return CASES.SIMPLIFICATION;
     } else if (isGeneralExpressionFunctionApplication(pattern) || isMetavariable(pattern.children[1])) {
@@ -194,14 +194,14 @@ export class Constraint {
    */
   breakIntoArgPairs() {
     var arg_pairs = [];
-    if (this.pattern.type == "a" && this.expression.type == "a") {
+    if (this.pattern.type === "a" && this.expression.type === "a") {
       let pattern_children = this.pattern.children;
       let expression_children = this.expression.children;
       // In getting the case, we checked that the length of children was the same
       for (let i = 0; i < pattern_children.length; i++) {
         arg_pairs.push(new Constraint(pattern_children[i].copy(), expression_children[i].copy()));
       }
-    } else if (this.pattern.type == "bi" && this.expression.type == "bi") {
+    } else if (this.pattern.type === "bi" && this.expression.type === "bi") {
       let pattern_vars = this.pattern.variables;
       let expression_vars = this.expression.variables;
       let pattern_body = this.pattern.body;
@@ -285,7 +285,7 @@ export class ConstraintList {
   add(...constraints) {
     constraints.forEach((constraint) => {
       // Don't add if it's already in the list
-      if (this.indexAtWhich((c) => c.equals(constraint)) == -1) {
+      if (this.indexAtWhich((c) => c.equals(constraint)) === -1) {
         // Set the next new var index
         var p_vars = getVariablesIn(constraint.pattern);
         for (let j = 0; j < p_vars.length; j++) {
@@ -333,7 +333,7 @@ export class ConstraintList {
    */
   firstSatisfying(predicate) {
     var index = this.indexAtWhich(predicate);
-    return index == -1 ? null : this.contents[index];
+    return index === -1 ? null : this.contents[index];
   }
 
   /**
@@ -343,7 +343,7 @@ export class ConstraintList {
   firstPairSatisfying(predicate) {
     for (let i = 0; i < this.contents.length; i++) {
       for (let j = 0; j < this.contents.length; j++) {
-        if (i != j) {
+        if (i !== j) {
           var constraint1 = this.contents[i];
           var constraint2 = this.contents[j];
           if (predicate(constraint1, constraint2)) {
@@ -362,15 +362,15 @@ export class ConstraintList {
    */
   getBestCase() {
     var constraint;
-    if ((constraint = this.firstSatisfying((c) => c.case == CASES.FAILURE)) != null) {
+    if ((constraint = this.firstSatisfying((c) => c.case === CASES.FAILURE)) != null) {
       return constraint;
-    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.IDENTITY)) != null) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case === CASES.IDENTITY)) != null) {
       return constraint;
-    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.BINDING)) != null) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case === CASES.BINDING)) != null) {
       return constraint;
-    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.SIMPLIFICATION)) != null) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case === CASES.SIMPLIFICATION)) != null) {
       return constraint;
-    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.EFA)) != null) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case === CASES.EFA)) != null) {
       return constraint;
     } else {
       return null;
@@ -453,7 +453,7 @@ export class ConstraintList {
   computeBindingConstraints() {
     this.contents.forEach((constraint) =>
       constraint.pattern
-        .descendantsSatisfying((d) => d.type == "bi")
+        .descendantsSatisfying((d) => d.type === "bi")
         .forEach((binding) =>
           binding.descendantsSatisfying(isMetavariable).forEach((innerMV) => {
             if (innerMV.isFree(binding)) {
