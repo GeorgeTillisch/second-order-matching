@@ -40,7 +40,7 @@ describe("Temporary holding pen for miscellaneous tests", () => {
       ["_Q_of__b", "b(2)"],
       ["_R_of__c", "c(3)"],
       ["_S_of__d", "d(4)"],
-      ["_T_of_x", "e(5,6)"]
+      ["_T_of_x", "e(5,6)"],
     );
     mc = newMC(constraints);
     sols = mc.getSolutions();
@@ -89,10 +89,7 @@ describe("Temporary holding pen for miscellaneous tests", () => {
     DEBUG_PRINT_SOLS(mc.solutions);
 
     // Case 4 simple, 1 solution
-    constraints = newConstraints([
-      "and(_P_of_1,_P_of_2)",
-      "and(neq(0,1),neq(0,2))",
-    ]);
+    constraints = newConstraints(["and(_P_of_1,_P_of_2)", "and(neq(0,1),neq(0,2))"]);
     mc = newMC(constraints);
     iterator = mc.solveGenerator();
     next = iterator.next();

@@ -28,6 +28,7 @@ import {
   makeProjectionExpression,
   makeImitationExpression,
 } from "./language.js";
+
 export {
   OM,
   isMetavariable,
@@ -120,10 +121,8 @@ export class Constraint {
    */
   equals(other) {
     return (
-      (this.pattern.equals(other.pattern) ||
-        alphaEquivalent(this.pattern, other.pattern)) &&
-      (this.expression.equals(other.expression) ||
-        alphaEquivalent(this.expression, other.expression))
+      (this.pattern.equals(other.pattern) || alphaEquivalent(this.pattern, other.pattern)) &&
+      (this.expression.equals(other.expression) || alphaEquivalent(this.expression, other.expression))
     );
   }
 
@@ -156,10 +155,7 @@ export class Constraint {
         pattern.variables.length == expression.variables.length)
     ) {
       return CASES.SIMPLIFICATION;
-    } else if (
-      isGeneralExpressionFunctionApplication(pattern) ||
-      isMetavariable(pattern.children[1])
-    ) {
+    } else if (isGeneralExpressionFunctionApplication(pattern) || isMetavariable(pattern.children[1])) {
       return CASES.EFA;
     } else {
       return CASES.FAILURE;
@@ -184,9 +180,7 @@ export class Constraint {
     replaceWithoutCapture(result, this.pattern, this.expression);
     result
       .descendantsSatisfying(canApplyGeneralExpressionFunctionApplication)
-      .forEach((x) =>
-        x.replaceWith(applyGeneralExpressionFunctionApplication(x))
-      );
+      .forEach((x) => x.replaceWith(applyGeneralExpressionFunctionApplication(x)));
     return result;
   }
 
@@ -205,12 +199,7 @@ export class Constraint {
       let expression_children = this.expression.children;
       // In getting the case, we checked that the length of children was the same
       for (let i = 0; i < pattern_children.length; i++) {
-        arg_pairs.push(
-          new Constraint(
-            pattern_children[i].copy(),
-            expression_children[i].copy()
-          )
-        );
+        arg_pairs.push(new Constraint(pattern_children[i].copy(), expression_children[i].copy()));
       }
     } else if (this.pattern.type == "bi" && this.expression.type == "bi") {
       let pattern_vars = this.pattern.variables;
@@ -219,14 +208,10 @@ export class Constraint {
       let expression_body = this.expression.body;
       // In getting the case, we checked that the length of variables was the same
       for (let i = 0; i < pattern_vars.length; i++) {
-        arg_pairs.push(
-          new Constraint(pattern_vars[i].copy(), expression_vars[i].copy())
-        );
+        arg_pairs.push(new Constraint(pattern_vars[i].copy(), expression_vars[i].copy()));
       }
       // Also push the body of each binding to arg pairs
-      arg_pairs.push(
-        new Constraint(pattern_body.copy(), expression_body.copy())
-      );
+      arg_pairs.push(new Constraint(pattern_body.copy(), expression_body.copy()));
     }
     return arg_pairs;
   }
@@ -304,17 +289,11 @@ export class ConstraintList {
         // Set the next new var index
         var p_vars = getVariablesIn(constraint.pattern);
         for (let j = 0; j < p_vars.length; j++) {
-          this.nextNewVariableIndex = checkVariable(
-            p_vars[j],
-            this.nextNewVariableIndex
-          );
+          this.nextNewVariableIndex = checkVariable(p_vars[j], this.nextNewVariableIndex);
         }
         var e_vars = getVariablesIn(constraint.expression);
         for (let k = 0; k < e_vars.length; k++) {
-          this.nextNewVariableIndex = checkVariable(
-            e_vars[k],
-            this.nextNewVariableIndex
-          );
+          this.nextNewVariableIndex = checkVariable(e_vars[k], this.nextNewVariableIndex);
         }
         // Add the constraint
         this.contents.push(constraint);
@@ -383,30 +362,15 @@ export class ConstraintList {
    */
   getBestCase() {
     var constraint;
-    if (
-      (constraint = this.firstSatisfying((c) => c.case == CASES.FAILURE)) !=
-      null
-    ) {
+    if ((constraint = this.firstSatisfying((c) => c.case == CASES.FAILURE)) != null) {
       return constraint;
-    } else if (
-      (constraint = this.firstSatisfying((c) => c.case == CASES.IDENTITY)) !=
-      null
-    ) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.IDENTITY)) != null) {
       return constraint;
-    } else if (
-      (constraint = this.firstSatisfying((c) => c.case == CASES.BINDING)) !=
-      null
-    ) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.BINDING)) != null) {
       return constraint;
-    } else if (
-      (constraint = this.firstSatisfying(
-        (c) => c.case == CASES.SIMPLIFICATION
-      )) != null
-    ) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.SIMPLIFICATION)) != null) {
       return constraint;
-    } else if (
-      (constraint = this.firstSatisfying((c) => c.case == CASES.EFA)) != null
-    ) {
+    } else if ((constraint = this.firstSatisfying((c) => c.case == CASES.EFA)) != null) {
       return constraint;
     } else {
       return null;
@@ -496,9 +460,7 @@ export class ConstraintList {
               binding.variables.forEach((outerMV) => {
                 if (
                   !this.bindingConstraints.find(
-                    (existing) =>
-                      existing.outer.equals(outerMV) &&
-                      existing.inner.equals(innerMV)
+                    (existing) => existing.outer.equals(outerMV) && existing.inner.equals(innerMV),
                   )
                 ) {
                   this.bindingConstraints.push({
@@ -508,8 +470,8 @@ export class ConstraintList {
                 }
               });
             }
-          })
-        )
+          }),
+        ),
     );
   }
 

@@ -69,22 +69,13 @@ describe("The Constraint class", () => {
     expect(c.case).toBe(M.CASES.FAILURE);
 
     // Test bindings
-    c = new M.Constraint(
-      quick("for.all[_x,_P]"),
-      quick("for.all[r,greater.than(plus(sq(r),1),0)]")
-    );
+    c = new M.Constraint(quick("for.all[_x,_P]"), quick("for.all[r,greater.than(plus(sq(r),1),0)]"));
     expect(c.case).toBe(M.CASES.SIMPLIFICATION);
 
-    c = new M.Constraint(
-      quick("for.all[_x,_y,_P]"),
-      quick("for.all[r,s,greater.than(plus(sq(r),1),0)]")
-    );
+    c = new M.Constraint(quick("for.all[_x,_y,_P]"), quick("for.all[r,s,greater.than(plus(sq(r),1),0)]"));
     expect(c.case).toBe(M.CASES.SIMPLIFICATION);
 
-    c = new M.Constraint(
-      quick("for.all[_x,_y,_P]"),
-      quick("for.all[r,greater.than(plus(sq(r),1),0)]")
-    );
+    c = new M.Constraint(quick("for.all[_x,_y,_P]"), quick("for.all[r,greater.than(plus(sq(r),1),0)]"));
     expect(c.case).toBe(M.CASES.FAILURE);
   });
 
@@ -380,10 +371,7 @@ describe("The ConstraintList class", () => {
     expect(CL3.firstPairSatisfying(expressionTypesEqual)).toBeNull();
     expect(CL4.firstPairSatisfying(expressionTypesEqual)).toBeNull();
     var biggerPattern = (constr1, constr2) => {
-      return (
-        constr1.pattern.simpleEncode().length >
-        constr2.pattern.simpleEncode().length
-      );
+      return constr1.pattern.simpleEncode().length > constr2.pattern.simpleEncode().length;
     };
     expect(CL1.firstPairSatisfying(biggerPattern)).toBeNull();
     expect(CL2.firstPairSatisfying(biggerPattern)).toEqual([con1, con3]);
@@ -395,17 +383,14 @@ describe("The ConstraintList class", () => {
     var failure_constraint = new M.Constraint(quick("k"), quick("p"));
     var identity_constraint = new M.Constraint(quick("a"), quick("a"));
     var binding_constraint = new M.Constraint(quick("_Y"), quick("k"));
-    var simplification_constraint = new M.Constraint(
-      quick("and(_P,_Q)"),
-      quick("and(a,b)")
-    );
+    var simplification_constraint = new M.Constraint(quick("and(_P,_Q)"), quick("and(a,b)"));
     var efa_constraint = new M.Constraint(quick("_P_of_1"), quick("0"));
     var CL = new M.ConstraintList(
       efa_constraint,
       binding_constraint,
       simplification_constraint,
       failure_constraint,
-      identity_constraint
+      identity_constraint,
     );
 
     expect(CL.getBestCase()).toBe(failure_constraint);
@@ -510,54 +495,27 @@ describe("Constraint manipulation functions", () => {
     expect(constr.case).toBe(M.CASES.SIMPLIFICATION);
     arg_pairs = constr.breakIntoArgPairs();
     expect(arg_pairs.length).toBe(3);
-    expect(
-      arg_pairs[0].equals(new M.Constraint(quick("and"), quick("and")))
-    ).toBe(true);
-    expect(arg_pairs[1].equals(new M.Constraint(quick("_P"), quick("a")))).toBe(
-      true
-    );
-    expect(
-      arg_pairs[2].equals(new M.Constraint(quick("_Q"), quick("or(b,c)")))
-    ).toBe(true);
+    expect(arg_pairs[0].equals(new M.Constraint(quick("and"), quick("and")))).toBe(true);
+    expect(arg_pairs[1].equals(new M.Constraint(quick("_P"), quick("a")))).toBe(true);
+    expect(arg_pairs[2].equals(new M.Constraint(quick("_Q"), quick("or(b,c)")))).toBe(true);
 
-    constr = new M.Constraint(
-      quick("times(plus(_X,_Y),minus(_X,_Y))"),
-      quick("times(plus(3,k),minus(3,p))")
-    );
+    constr = new M.Constraint(quick("times(plus(_X,_Y),minus(_X,_Y))"), quick("times(plus(3,k),minus(3,p))"));
     arg_pairs = constr.breakIntoArgPairs();
     expect(arg_pairs.length).toBe(3);
 
     // Check for bindings
-    constr = new M.Constraint(
-      quick("for.all[_x,_P]"),
-      quick("for.all[r,plus(0,1)]")
-    );
+    constr = new M.Constraint(quick("for.all[_x,_P]"), quick("for.all[r,plus(0,1)]"));
     arg_pairs = constr.breakIntoArgPairs();
     expect(arg_pairs.length).toBe(2);
-    expect(arg_pairs[0].equals(new M.Constraint(quick("_x"), quick("r")))).toBe(
-      true
-    );
-    expect(
-      arg_pairs[1].equals(new M.Constraint(quick("_P"), quick("plus(0,1)")))
-    ).toBe(true);
+    expect(arg_pairs[0].equals(new M.Constraint(quick("_x"), quick("r")))).toBe(true);
+    expect(arg_pairs[1].equals(new M.Constraint(quick("_P"), quick("plus(0,1)")))).toBe(true);
 
-    constr = new M.Constraint(
-      quick("for.all[_x,_y,_z,_P]"),
-      quick("for.all[r,s,t,plus(0,1)]")
-    );
+    constr = new M.Constraint(quick("for.all[_x,_y,_z,_P]"), quick("for.all[r,s,t,plus(0,1)]"));
     arg_pairs = constr.breakIntoArgPairs();
     expect(arg_pairs.length).toBe(4);
-    expect(arg_pairs[0].equals(new M.Constraint(quick("_x"), quick("r")))).toBe(
-      true
-    );
-    expect(arg_pairs[1].equals(new M.Constraint(quick("_y"), quick("s")))).toBe(
-      true
-    );
-    expect(arg_pairs[2].equals(new M.Constraint(quick("_z"), quick("t")))).toBe(
-      true
-    );
-    expect(
-      arg_pairs[3].equals(new M.Constraint(quick("_P"), quick("plus(0,1)")))
-    ).toBe(true);
+    expect(arg_pairs[0].equals(new M.Constraint(quick("_x"), quick("r")))).toBe(true);
+    expect(arg_pairs[1].equals(new M.Constraint(quick("_y"), quick("s")))).toBe(true);
+    expect(arg_pairs[2].equals(new M.Constraint(quick("_z"), quick("t")))).toBe(true);
+    expect(arg_pairs[3].equals(new M.Constraint(quick("_P"), quick("plus(0,1)")))).toBe(true);
   });
 });

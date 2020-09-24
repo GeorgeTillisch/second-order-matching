@@ -87,31 +87,20 @@ describe("Instantiation", () => {
     var p6 = quick("for.all[y,gr.th(sq.uare(x),y)]");
     var p6copy = p6.copy();
     var sub6 = new M.Constraint(quick("x"), quick("a"));
-    expect(
-      sub6
-        .applyInstantiation(p6)
-        .equals(quick("for.all[y,gr.th(sq.uare(a),y)]"))
-    ).toBe(true);
+    expect(sub6.applyInstantiation(p6).equals(quick("for.all[y,gr.th(sq.uare(a),y)]"))).toBe(true);
     expect(p6.equals(p6copy)).toBe(true);
 
     // Test the case where replacement can cause variable capture
     var p7 = quick("for.all[x,gr.th(sq.uare(x),c)]");
     var p7copy = p7.copy();
     var sub7 = new M.Constraint(quick("c"), quick("x"));
-    expect(
-      sub7
-        .applyInstantiation(p7)
-        .equals(quick("for.all[x0,gr.th(sq.uare(x0),x)]"))
-    ).toBe(true);
+    expect(sub7.applyInstantiation(p7).equals(quick("for.all[x0,gr.th(sq.uare(x0),x)]"))).toBe(true);
     expect(p7.equals(p7copy)).toBe(true);
   });
 
   test("should correctly apply a list of instantiations", () => {
     // Check the case where the substitutions transform a pattern into an expression
-    var con1 = new M.Constraint(
-      quick("l.and(_P,_Q)"),
-      quick("l.and(a,l.or(b,c))")
-    );
+    var con1 = new M.Constraint(quick("l.and(_P,_Q)"), quick("l.and(a,l.or(b,c))"));
     var sub1 = new M.Constraint(quick("_P"), quick("a"));
     var sub2 = new M.Constraint(quick("_Q"), quick("l.or(b,c)"));
 
@@ -119,12 +108,8 @@ describe("Instantiation", () => {
     var SL1 = new M.ConstraintList(sub1, sub2);
 
     SL1.instantiate(CL1);
-    expect(CL1.contents[0].pattern.equals(quick("l.and(a,l.or(b,c))"))).toBe(
-      true
-    );
-    expect(CL1.contents[0].pattern.equals(CL1.contents[0].expression)).toBe(
-      true
-    );
+    expect(CL1.contents[0].pattern.equals(quick("l.and(a,l.or(b,c))"))).toBe(true);
+    expect(CL1.contents[0].pattern.equals(CL1.contents[0].expression)).toBe(true);
     // Check that the order of the subs list does not matter
     var CL1new = new M.ConstraintList(con1);
     SL1 = new M.ConstraintList(sub2, sub1);
@@ -132,10 +117,7 @@ describe("Instantiation", () => {
     expect(CL1new.equals(CL1)).toBe(true);
 
     // Check the case where the substitutions do not make the pattern exactly match the expression
-    var con2 = new M.Constraint(
-      quick("m.ply(p.lus(_X,_Y),mi.nus(_X,_Y))"),
-      quick("m.ply(p.lus(3,k),mi.nus(3,p))")
-    );
+    var con2 = new M.Constraint(quick("m.ply(p.lus(_X,_Y),mi.nus(_X,_Y))"), quick("m.ply(p.lus(3,k),mi.nus(3,p))"));
     var sub3 = new M.Constraint(quick("_X"), quick("3"));
     var sub4 = new M.Constraint(quick("_Y"), quick("k"));
 
@@ -143,29 +125,14 @@ describe("Instantiation", () => {
     var SL2 = new M.ConstraintList(sub3, sub4);
 
     SL2.instantiate(CL2);
+    expect(CL2.contents[0].pattern.equals(quick("m.ply(p.lus(3,k),mi.nus(3,k))"))).toBe(true);
     expect(
-      CL2.contents[0].pattern.equals(quick("m.ply(p.lus(3,k),mi.nus(3,k))"))
-    ).toBe(true);
-    expect(
-      CL2.equals(
-        new M.ConstraintList(
-          new M.Constraint(
-            quick("m.ply(p.lus(3,k),mi.nus(3,k))"),
-            con2.expression
-          )
-        )
-      )
+      CL2.equals(new M.ConstraintList(new M.Constraint(quick("m.ply(p.lus(3,k),mi.nus(3,k))"), con2.expression))),
     ).toBe(true);
 
     // Check the case where substiutions contain gEFs as expressions
-    var con3 = new M.Constraint(
-      quick("l.and(_P_of_1,_P_of_2)"),
-      quick("l.and(n.eq(0,1),n.eq(0,2))")
-    );
-    var sub5 = new M.Constraint(
-      quick("_P"),
-      ef(quick("v1"), quick("n.eq(_H1_of_v1,_H2_of_v1)"))
-    );
+    var con3 = new M.Constraint(quick("l.and(_P_of_1,_P_of_2)"), quick("l.and(n.eq(0,1),n.eq(0,2))"));
+    var sub5 = new M.Constraint(quick("_P"), ef(quick("v1"), quick("n.eq(_H1_of_v1,_H2_of_v1)")));
     var sub6 = new M.Constraint(quick("_H1"), ef(quick("v1"), quick("0")));
     var sub7 = new M.Constraint(quick("_H2"), ef(quick("v1"), quick("v1")));
 
@@ -174,9 +141,7 @@ describe("Instantiation", () => {
 
     SL3.instantiate(CL3);
     expect(CL3.contents[0].pattern.equals(con3.expression)).toBe(true);
-    expect(CL3.contents[0].pattern.equals(CL3.contents[0].expression)).toBe(
-      true
-    );
+    expect(CL3.contents[0].pattern.equals(CL3.contents[0].expression)).toBe(true);
 
     // In this case, the order of substitutions does matter.
     // But, replacing the temporary variables should give the same result.
@@ -186,9 +151,7 @@ describe("Instantiation", () => {
     var CL4 = new M.ConstraintList(con3);
     new M.ConstraintList(sub8).instantiate(CL4);
     expect(CL4.contents[0].pattern.equals(con3.expression)).toBe(true);
-    expect(CL4.contents[0].pattern.equals(CL4.contents[0].expression)).toBe(
-      true
-    );
+    expect(CL4.contents[0].pattern.equals(CL4.contents[0].expression)).toBe(true);
   });
 });
 
@@ -197,10 +160,7 @@ describe("Expression manipluation", () => {
     var e1 = OM.simple("v1");
     var e2 = OM.simple("f.a[v1,x0,x1,x2]");
     var e3 = OM.simple("F(x0,x1,x2,x3,x4)");
-    var e4 = M.makeGeneralExpressionFunction(
-      [OM.var("x1"), OM.var("a")],
-      OM.simple("plus(x1,a)")
-    );
+    var e4 = M.makeGeneralExpressionFunction([OM.var("x1"), OM.var("a")], OM.simple("plus(x1,a)"));
     var e5 = OM.simple("x");
 
     var x0 = M.getNewVariableRelativeTo(e1);
@@ -247,13 +207,9 @@ describe("Expression manipluation", () => {
 
     expect(M.isGeneralExpressionFunction(gef1)).toBe(true);
     var ac1 = M.alphaConvert(gef1, v1, r1);
-    expect(ac1.equals(M.makeGeneralExpressionFunction([r1, v2], b2))).toBe(
-      true
-    );
+    expect(ac1.equals(M.makeGeneralExpressionFunction([r1, v2], b2))).toBe(true);
     var ac2 = M.alphaConvert(ac1, v2, r2);
-    expect(ac2.equals(M.makeGeneralExpressionFunction([r1, r2], b3))).toBe(
-      true
-    );
+    expect(ac2.equals(M.makeGeneralExpressionFunction([r1, r2], b3))).toBe(true);
     expect(gef1.equals(gef1copy)).toBe(true);
 
     var b4 = OM.simple("F(v1,v2,c)");
@@ -273,10 +229,7 @@ describe("Expression manipluation", () => {
     var v2 = OM.var("v2");
     var b1 = OM.simple("for.all[x,pl.us(x,v1,v2)]");
     var gef1 = M.makeGeneralExpressionFunction([v1, v2], b1);
-    var expected2 = M.makeGeneralExpressionFunction(
-      [OM.var("x"), v2],
-      OM.simple("for.all[x0,pl.us(x0,x,v2)]")
-    );
+    var expected2 = M.makeGeneralExpressionFunction([OM.var("x"), v2], OM.simple("for.all[x0,pl.us(x0,x,v2)]"));
     var gef1copy = gef1.copy();
 
     expect(M.isGeneralExpressionFunction(gef1)).toBe(true);
@@ -297,17 +250,11 @@ describe("Expression manipluation", () => {
     expect(bind1.equals(expected2)).toBe(true);
 
     var bind2 = OM.simple("for.all[x,for.all[y,for.all[z,pl.us(x,y,z,a)]]]");
-    var expected3 = OM.simple(
-      "for.all[x0,for.all[y,for.all[z,pl.us(x0,y,z,x)]]]"
-    );
+    var expected3 = OM.simple("for.all[x0,for.all[y,for.all[z,pl.us(x0,y,z,x)]]]");
     var bind3 = bind2.copy();
-    var expected4 = OM.simple(
-      "for.all[x,for.all[x0,for.all[z,pl.us(x,x0,z,y)]]]"
-    );
+    var expected4 = OM.simple("for.all[x,for.all[x0,for.all[z,pl.us(x,x0,z,y)]]]");
     var bind4 = bind2.copy();
-    var expected5 = OM.simple(
-      "for.all[x,for.all[y,for.all[x0,pl.us(x,y,x0,z)]]]"
-    );
+    var expected5 = OM.simple("for.all[x,for.all[y,for.all[x0,pl.us(x,y,x0,z)]]]");
     M.replaceWithoutCapture(bind2, OM.var("a"), OM.var("x"));
     expect(bind2.equals(expected3)).toBe(true);
     M.replaceWithoutCapture(bind3, OM.var("a"), OM.var("y"));
@@ -316,30 +263,28 @@ describe("Expression manipluation", () => {
     expect(bind4.equals(expected5)).toBe(true);
     M.replaceWithoutCapture(bind2, OM.var("x"), OM.var("y"));
     M.replaceWithoutCapture(bind2, OM.var("y"), OM.var("z"));
-    var expected6 = OM.simple(
-      "for.all[x0,for.all[x1,for.all[x2,pl.us(x0,x1,x2,z)]]]"
-    );
+    var expected6 = OM.simple("for.all[x0,for.all[x1,for.all[x2,pl.us(x0,x1,x2,z)]]]");
     expect(bind2.equals(expected6)).toBe(true);
 
     var gef1 = M.makeGeneralExpressionFunction(
       [OM.var("v1"), OM.var("v2")],
-      OM.simple("for.all[v3,pl.us(v1,v2,v3,a)]")
+      OM.simple("for.all[v3,pl.us(v1,v2,v3,a)]"),
     );
     var expected7 = M.makeGeneralExpressionFunction(
       [OM.var("x0"), OM.var("v2")],
-      OM.simple("for.all[v3,pl.us(x0,v2,v3,v1)]")
+      OM.simple("for.all[v3,pl.us(x0,v2,v3,v1)]"),
     );
     var expected8 = M.makeGeneralExpressionFunction(
       [OM.var("x0"), OM.var("x1")],
-      OM.simple("for.all[v3,pl.us(x0,x1,v3,v2)]")
+      OM.simple("for.all[v3,pl.us(x0,x1,v3,v2)]"),
     );
     var expected9 = M.makeGeneralExpressionFunction(
       [OM.var("x0"), OM.var("x1")],
-      OM.simple("for.all[x2,pl.us(x0,x1,x2,v3)]")
+      OM.simple("for.all[x2,pl.us(x0,x1,x2,v3)]"),
     );
     var expected10 = M.makeGeneralExpressionFunction(
       [OM.var("x3"), OM.var("x1")],
-      OM.simple("for.all[x2,pl.us(x3,x1,x2,x0)]")
+      OM.simple("for.all[x2,pl.us(x3,x1,x2,x0)]"),
     );
     M.replaceWithoutCapture(gef1, OM.var("a"), OM.var("v1"));
     expect(gef1.equals(expected7)).toBe(true);
@@ -355,9 +300,7 @@ describe("Expression manipluation", () => {
     expect(bind3.equals(OM.simple("for.all[z,P(z,y)]"))).toBe(true);
     var bind3 = OM.simple("for.all[a,b,c,R(f(a),g(b),h(c))]");
     M.replaceWithoutCapture(bind3, OM.var("b"), OM.var("B"));
-    expect(bind3.equals(OM.simple("for.all[a,B,c,R(f(a),g(B),h(c))]"))).toBe(
-      true
-    );
+    expect(bind3.equals(OM.simple("for.all[a,B,c,R(f(a),g(B),h(c))]"))).toBe(true);
   });
 
   test("should implement alpha equivalence for expressions", () => {
@@ -393,18 +336,9 @@ describe("Expression manipluation", () => {
     expect(gef2copy.equals(gef2)).toBe(true);
     expect(gef3copy.equals(gef3)).toBe(true);
 
-    var gef4 = M.makeGeneralExpressionFunction(
-      [v1, v2, v3],
-      OM.simple("pl.us(v1,v2,v3)")
-    );
-    var gef5 = M.makeGeneralExpressionFunction(
-      [v3, v2, v1],
-      OM.simple("pl.us(v3,v2,v1)")
-    );
-    var gef6 = M.makeGeneralExpressionFunction(
-      [OM.var("a"), OM.var("b"), OM.var("c")],
-      OM.simple("pl.us(a,b,c)")
-    );
+    var gef4 = M.makeGeneralExpressionFunction([v1, v2, v3], OM.simple("pl.us(v1,v2,v3)"));
+    var gef5 = M.makeGeneralExpressionFunction([v3, v2, v1], OM.simple("pl.us(v3,v2,v1)"));
+    var gef6 = M.makeGeneralExpressionFunction([OM.var("a"), OM.var("b"), OM.var("c")], OM.simple("pl.us(a,b,c)"));
 
     expect(M.alphaEquivalent(gef4, gef1)).toBe(false);
     expect(M.alphaEquivalent(gef5, gef2)).toBe(false);
@@ -420,18 +354,9 @@ describe("Expression manipluation", () => {
     expect(M.alphaEquivalent(gef6, gef5)).toBe(true);
     expect(M.alphaEquivalent(gef6, gef6)).toBe(true);
 
-    var gef7 = M.makeGeneralExpressionFunction(
-      [v1],
-      OM.simple("for.all[x,pl.us(x,v1)]")
-    );
-    var gef8 = M.makeGeneralExpressionFunction(
-      [v2],
-      OM.simple("for.all[x,pl.us(x,v2)]")
-    );
-    var gef9 = M.makeGeneralExpressionFunction(
-      [v3],
-      OM.simple("for.all[x,pl.us(x,randomvar)]")
-    );
+    var gef7 = M.makeGeneralExpressionFunction([v1], OM.simple("for.all[x,pl.us(x,v1)]"));
+    var gef8 = M.makeGeneralExpressionFunction([v2], OM.simple("for.all[x,pl.us(x,v2)]"));
+    var gef9 = M.makeGeneralExpressionFunction([v3], OM.simple("for.all[x,pl.us(x,randomvar)]"));
 
     expect(M.alphaEquivalent(gef7, gef4)).toBe(false);
     expect(M.alphaEquivalent(gef8, gef5)).toBe(false);
@@ -487,14 +412,10 @@ describe("Expression manipluation", () => {
     expect(br1.equals(expected1)).toBe(true);
     expect(gef1.equals(gef1copy)).toBe(true);
 
-    var b2 = OM.simple(
-      "for.all[x,for.all[y,for.all[z,pl.us(x,y,z,v1,v2,v3)]]]"
-    );
+    var b2 = OM.simple("for.all[x,for.all[y,for.all[z,pl.us(x,y,z,v1,v2,v3)]]]");
     var gef2 = M.makeGeneralExpressionFunction([v1, v2, v3], b2);
     var gef2copy = gef2.copy();
-    var expected2 = OM.simple(
-      "for.all[x0,for.all[x1,for.all[x2,pl.us(x0,x1,x2,x,y,z)]]]"
-    );
+    var expected2 = OM.simple("for.all[x0,for.all[x1,for.all[x2,pl.us(x0,x1,x2,x,y,z)]]]");
     var br2 = M.betaReduce(gef2, [OM.var("x"), OM.var("y"), OM.var("z")]);
     expect(br2.equals(expected2)).toBe(true);
     expect(gef2.equals(gef2copy)).toBe(true);

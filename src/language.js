@@ -10,6 +10,7 @@
 // TODO: handle the case of this module running in the browser
 // Import openmath-js for testing purposes
 import { OM } from "openmath-js";
+
 export { OM };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,10 +62,7 @@ export function isMetavariable(variable) {
 ////////////////////////////////////////////////////////////////////////////////
 
 const generalExpressionFunction = OM.symbol("gEF", "SecondOrderMatching");
-const generalExpressionFunctionApplication = OM.symbol(
-  "gEFA",
-  "SecondOrderMatching"
-);
+const generalExpressionFunctionApplication = OM.symbol("gEFA", "SecondOrderMatching");
 
 /**
  * Makes a new expression function with the meaning
@@ -91,11 +89,7 @@ all elements of first argument must have type variable";
  * @param {OM} expression - the expression to be checked
  */
 export function isGeneralExpressionFunction(expression) {
-  return (
-    expression instanceof OM &&
-    expression.type == "bi" &&
-    expression.symbol.equals(generalExpressionFunction)
-  );
+  return expression instanceof OM && expression.type == "bi" && expression.symbol.equals(generalExpressionFunction);
 }
 
 /**
@@ -135,10 +129,7 @@ export function isGeneralExpressionFunctionApplication(expression) {
  * @param {OM} gEFA - a general expression function application
  */
 export function canApplyGeneralExpressionFunctionApplication(gEFA) {
-  if (
-    isGeneralExpressionFunctionApplication(gEFA) &&
-    isGeneralExpressionFunction(gEFA.children[1])
-  ) {
+  if (isGeneralExpressionFunctionApplication(gEFA) && isGeneralExpressionFunction(gEFA.children[1])) {
     return true;
   }
   return false;
@@ -229,11 +220,7 @@ export function alphaConvert(binding, which_var, replace_var) {
  * @param {OM} replacement - an OM expression
  */
 export function replaceWithoutCapture(expr, variable, replacement) {
-  if (
-    !(expr instanceof OM) ||
-    !(variable instanceof OM) ||
-    !(replacement instanceof OM)
-  ) {
+  if (!(expr instanceof OM) || !(variable instanceof OM) || !(replacement instanceof OM)) {
     throw "all arguments must be instances of OMNode";
   }
   if (expr.type != "bi") {
@@ -277,9 +264,7 @@ export function replaceWithoutCapture(expr, variable, replacement) {
             // FIXME: this doesn't seem like the best way to get new variables, but works for now.
             //      need some way of generating global new variables
             //      E.g. a class called new variable stream
-            expr.replaceWith(
-              alphaConvert(expr, bound_var, getNewVariableRelativeTo(expr))
-            );
+            expr.replaceWith(alphaConvert(expr, bound_var, getNewVariableRelativeTo(expr)));
           }
         });
       }
@@ -305,11 +290,7 @@ export function alphaEquivalent(expr1, expr2, firstcall = true) {
   if (expr1.type != expr2.type) {
     return false;
   }
-  if (
-    firstcall &&
-    (!possible_types.includes(expr1.type) ||
-      !possible_types.includes(expr2.type))
-  ) {
+  if (firstcall && (!possible_types.includes(expr1.type) || !possible_types.includes(expr2.type))) {
     return false;
   }
   if (expr1.type == "a") {
@@ -327,10 +308,7 @@ export function alphaEquivalent(expr1, expr2, firstcall = true) {
     }
     return true;
   } else if (expr1.type == "bi") {
-    if (
-      expr1.variables.length != expr2.variables.length ||
-      !expr1.symbol.equals(expr2.symbol)
-    ) {
+    if (expr1.variables.length != expr2.variables.length || !expr1.symbol.equals(expr2.symbol)) {
       return false;
     }
     // Alpha convert all bound variables in both expressions to
@@ -392,10 +370,7 @@ export function betaReduce(gEF, expr_list) {
  */
 export function checkVariable(variable, nextNewVariableIndex) {
   if (/^v[0-9]+$/.test(variable.name)) {
-    nextNewVariableIndex = Math.max(
-      nextNewVariableIndex,
-      parseInt(variable.name.slice(1)) + 1
-    );
+    nextNewVariableIndex = Math.max(nextNewVariableIndex, parseInt(variable.name.slice(1)) + 1);
   }
   return nextNewVariableIndex;
 }
@@ -422,10 +397,7 @@ export function getVariablesIn(expression) {
  */
 export function makeConstantExpression(new_variable, expression) {
   if (new_variable instanceof OM && expression instanceof OM) {
-    return makeGeneralExpressionFunction(
-      new_variable.copy(),
-      expression.copy()
-    );
+    return makeGeneralExpressionFunction(new_variable.copy(), expression.copy());
   }
   return null;
 }
@@ -444,7 +416,7 @@ export function makeProjectionExpression(variables, point) {
     }
     return makeGeneralExpressionFunction(
       variables.map((v) => v.copy()),
-      point.copy()
+      point.copy(),
     );
   }
   return null;
@@ -476,19 +448,11 @@ export function makeImitationExpression(variables, expr, temp_metavars) {
    * of the imitation function. This is an application of the form:
    * `head(temp_metavars[0](bound_vars),...,temp_metavars[len-1](bound_vars))`
    */
-  function createBody(
-    head,
-    bound_vars,
-    temp_metavars,
-    type,
-    binding_variables
-  ) {
+  function createBody(head, bound_vars, temp_metavars, type, binding_variables) {
     let args = [];
     for (let i = 0; i < temp_metavars.length; i++) {
       let temp_metavar = temp_metavars[i];
-      args.push(
-        makeGeneralExpressionFunctionApplication(temp_metavar, bound_vars)
-      );
+      args.push(makeGeneralExpressionFunctionApplication(temp_metavar, bound_vars));
     }
     if (type == "a") {
       return OM.app(...args);
@@ -508,8 +472,8 @@ export function makeImitationExpression(variables, expr, temp_metavars) {
         variables,
         temp_metavars,
         type,
-        type == "bi" ? expr.variables : null
-      )
+        type == "bi" ? expr.variables : null,
+      ),
     );
   }
 

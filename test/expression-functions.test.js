@@ -49,19 +49,13 @@ describe("Generalized Expression Functions", () => {
 
   test("should reliably make general expression function applications", () => {
     var gEF1 = M.makeGeneralExpressionFunction([OM.var("v1")], OM.simple("v1"));
-    var gEFA1 = M.makeGeneralExpressionFunctionApplication(
-      gEF1,
-      OM.simple("sq.uare(v1)")
-    );
+    var gEFA1 = M.makeGeneralExpressionFunctionApplication(gEF1, OM.simple("sq.uare(v1)"));
 
     expect(M.isGeneralExpressionFunctionApplication(gEFA1)).toBe(true);
 
     var v1 = OM.var("P");
     M.setMetavariable(v1);
-    var gEFA2 = M.makeGeneralExpressionFunctionApplication(
-      v1,
-      OM.simple("sq.uare(v1)")
-    );
+    var gEFA2 = M.makeGeneralExpressionFunctionApplication(v1, OM.simple("sq.uare(v1)"));
 
     expect(M.isGeneralExpressionFunctionApplication(gEFA2)).toBe(true);
 
@@ -74,10 +68,7 @@ describe("Generalized Expression Functions", () => {
 
   test("should reliably detect whether a gEFA is applicable", () => {
     var gEF1 = M.makeGeneralExpressionFunction([OM.var("v1")], OM.simple("v1"));
-    var gEFA1 = M.makeGeneralExpressionFunctionApplication(
-      gEF1,
-      OM.simple("sq.uare(v1)")
-    );
+    var gEFA1 = M.makeGeneralExpressionFunctionApplication(gEF1, OM.simple("sq.uare(v1)"));
 
     expect(M.isGeneralExpressionFunction(gEF1)).toBe(true);
     expect(M.isGeneralExpressionFunctionApplication(gEFA1)).toBe(true);
@@ -93,25 +84,13 @@ describe("Generalized Expression Functions", () => {
     var gEFA1 = efa(ef("v1", "pl.us(v1,10)"), "1");
     var gEF1copy = gEFA1.copy();
 
-    expect(
-      M.applyGeneralExpressionFunctionApplication(gEFA1).equals(
-        quick("pl.us(1,10)")
-      )
-    ).toBe(true);
+    expect(M.applyGeneralExpressionFunctionApplication(gEFA1).equals(quick("pl.us(1,10)"))).toBe(true);
     expect(gEF1copy.equals(gEFA1)).toBe(true);
 
-    var gEFA2 = efa(ef(["v1", "v2", "v3"], "pl.us(v1,v2,v3)"), [
-      "10",
-      "20",
-      "30",
-    ]);
+    var gEFA2 = efa(ef(["v1", "v2", "v3"], "pl.us(v1,v2,v3)"), ["10", "20", "30"]);
     var gEFA2copy = gEFA2.copy();
 
-    expect(
-      M.applyGeneralExpressionFunctionApplication(gEFA2).equals(
-        quick("pl.us(10,20,30)")
-      )
-    ).toBe(true);
+    expect(M.applyGeneralExpressionFunctionApplication(gEFA2).equals(quick("pl.us(10,20,30)"))).toBe(true);
     expect(gEFA2copy.equals(gEFA2)).toBe(true);
   });
 });

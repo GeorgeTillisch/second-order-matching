@@ -24,6 +24,7 @@ import {
   Constraint,
   ConstraintList,
 } from "./constraints.js";
+
 export {
   OM,
   isMetavariable,
@@ -129,10 +130,7 @@ export class MatchingChallenge {
   clone() {
     var result = new MatchingChallenge();
     result.challengeList = this.challengeList.copy();
-    result.solutions =
-      this.solutions === undefined
-        ? undefined
-        : this.solutions.map((sol) => sol.copy());
+    result.solutions = this.solutions === undefined ? undefined : this.solutions.map((sol) => sol.copy());
     result.solvable = this.solvable;
     return result;
   }
@@ -200,12 +198,7 @@ export class MatchingChallenge {
    */
   getOneSolution() {
     if (this.solvable === false) return undefined;
-    if (
-      this.solvable === true &&
-      this.solutions !== undefined &&
-      this.solutions.length > 0
-    )
-      return this.solutions[0];
+    if (this.solvable === true && this.solutions !== undefined && this.solutions.length > 0) return this.solutions[0];
     // then, to ensure that later this class doesn't get confused and think
     // that we've computed all solutions just because we've computed
     // this.solvable, we set it to be undefined:
@@ -247,8 +240,8 @@ export class MatchingChallenge {
     // const tab = '\t'
     let mc = this;
     // if needed, create a brand-new solution we will evolve with recursion
-    if (mc.solutions === undefined || mc.solutions.length == 0)
-      mc.solutions = [new ConstraintList()];
+    if (mc.solutions === undefined || mc.solutions.length == 0) mc.solutions = [new ConstraintList()];
+
     function* recur() {
       // DEBUG( indent, DEBUG_CONSTRAINTLIST( mc.challengeList ),
       //     ' --> ', DEBUG_CONSTRAINTLIST( mc.solutions[0] ) )
@@ -275,18 +268,14 @@ export class MatchingChallenge {
           // DEBUG( indent+'BINDING' )
           mc.challengeList.remove(current_constraint);
           // Apply metavariable substitution to constraints
-          if (!mc.addSolutionAndCheckBindingConstraints(current_constraint))
-            break;
+          if (!mc.addSolutionAndCheckBindingConstraints(current_constraint)) break;
           yield* recur();
           break;
         case CASES.SIMPLIFICATION:
           // DEBUG( indent+'SIMPLIFICATION' )
           mc.challengeList.remove(current_constraint);
           // Do any necessary alpha conversion before breaking into argument paits
-          if (
-            current_constraint.pattern.type == "bi" &&
-            current_constraint.expression.type == "bi"
-          ) {
+          if (current_constraint.pattern.type == "bi" && current_constraint.expression.type == "bi") {
             let pattern_vars = current_constraint.pattern.variables;
             let expression_vars = current_constraint.expression.variables;
             // Get case checks number of arguments
@@ -297,13 +286,9 @@ export class MatchingChallenge {
                 current_constraint.expression = alphaConvert(
                   current_constraint.expression,
                   expression_vars[i],
-                  new_var
+                  new_var,
                 );
-                current_constraint.pattern = alphaConvert(
-                  current_constraint.pattern,
-                  pattern_vars[i],
-                  new_var
-                );
+                current_constraint.pattern = alphaConvert(current_constraint.pattern, pattern_vars[i], new_var);
               }
             }
           }
@@ -318,10 +303,7 @@ export class MatchingChallenge {
           let temp_mc_A = mc.clone();
           let const_sub = new Constraint(
             current_constraint.pattern.children[1],
-            makeConstantExpression(
-              temp_mc_A.challengeList.nextNewVariable(),
-              current_constraint.expression
-            )
+            makeConstantExpression(temp_mc_A.challengeList.nextNewVariable(), current_constraint.expression),
           );
           // DEBUG( indent+'maybe add:', DEBUG_CONSTRAINT( const_sub ) )
           if (temp_mc_A.addSolutionAndCheckBindingConstraints(const_sub)) {
@@ -339,13 +321,9 @@ export class MatchingChallenge {
             let new_vars = current_constraint.pattern.children
               .slice(2)
               .map(() => temp_mc_B.challengeList.nextNewVariable());
-            let proj_sub = new Constraint(
-              head,
-              makeProjectionExpression(new_vars, new_vars[i - 2])
-            );
+            let proj_sub = new Constraint(head, makeProjectionExpression(new_vars, new_vars[i - 2]));
             // DEBUG( indent+'maybe add:', DEBUG_CONSTRAINT( proj_sub ) )
-            if (!temp_mc_B.addSolutionAndCheckBindingConstraints(proj_sub))
-              break;
+            if (!temp_mc_B.addSolutionAndCheckBindingConstraints(proj_sub)) break;
             for (let sol of temp_mc_B.solutionsIterator(/*indent+tab*/)) {
               // DEBUG( indent+'EFA-2 result:', DEBUG_CONSTRAINTLIST( sol ) )
               yield sol;
@@ -376,34 +354,22 @@ export class MatchingChallenge {
             }
 
             // Get the imitation expression
-            let imitation_expr = makeImitationExpression(
-              new_vars,
-              expression,
-              temp_metavars
-            );
+            let imitation_expr = makeImitationExpression(new_vars, expression, temp_metavars);
 
-            let imitation_sub = new Constraint(
-              current_constraint.pattern.children[1],
-              imitation_expr
-            );
+            let imitation_sub = new Constraint(current_constraint.pattern.children[1], imitation_expr);
             // DEBUG( indent+'maybe add:', DEBUG_CONSTRAINT( imitation_expr ) )
-            if (!temp_mc_C.addSolutionAndCheckBindingConstraints(imitation_sub))
-              break;
+            if (!temp_mc_C.addSolutionAndCheckBindingConstraints(imitation_sub)) break;
 
             // Remove any temporary metavariables from the solutions, after making substitutions
             for (let sol of temp_mc_C.solutionsIterator(/*indent+tab*/)) {
               for (let i = 0; i < temp_metavars.length; i++) {
                 let metavar = temp_metavars[i];
-                let metavar_sub = sol.firstSatisfying((c) =>
-                  c.pattern.equals(metavar)
-                );
+                let metavar_sub = sol.firstSatisfying((c) => c.pattern.equals(metavar));
                 if (metavar_sub != null) {
                   sol.remove(metavar_sub);
                   for (let i = 0; i < sol.length; i++) {
                     let constraint = sol.contents[i];
-                    constraint.expression.replaceWith(
-                      metavar_sub.applyInstantiation(constraint.expression)
-                    );
+                    constraint.expression.replaceWith(metavar_sub.applyInstantiation(constraint.expression));
                     constraint.reEvalCase();
                   }
                 }
@@ -418,8 +384,10 @@ export class MatchingChallenge {
           }
       }
     }
+
     function uniqueIterator(nonUniqueIterator, comparator) {
       const seenSoFar = [];
+
       function* result() {
         for (const element of nonUniqueIterator) {
           if (!seenSoFar.some((x) => comparator(x, element))) {
@@ -428,8 +396,10 @@ export class MatchingChallenge {
           }
         }
       }
+
       return result();
     }
+
     return uniqueIterator(recur(), (sol1, sol2) => sol1.equals(sol2));
   }
 }

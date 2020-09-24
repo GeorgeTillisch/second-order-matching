@@ -30,33 +30,18 @@ describe("checkSolutions helper function", () => {
     expect(checkSolutions([], [])).toBe(true);
 
     // Test cases where length is different
-    expect(
-      checkSolutions(
-        newSolutions([["_x", "a"]]),
-        newSolutions([["_x", "a"]], [["_y", "b"]])
-      )
-    ).toBe(false);
+    expect(checkSolutions(newSolutions([["_x", "a"]]), newSolutions([["_x", "a"]], [["_y", "b"]]))).toBe(false);
 
     // Test simple correct case
-    expect(
-      checkSolutions(newSolutions([["_x", "a"]]), newSolutions([["_x", "a"]]))
-    ).toBe(true);
+    expect(checkSolutions(newSolutions([["_x", "a"]]), newSolutions([["_x", "a"]]))).toBe(true);
 
     // Test alpha equivalent cases
-    expect(
-      checkSolutions(
-        newSolutions([["_x", "for.all[v,v]"]]),
-        newSolutions([["_x", "for.all[m,m]"]])
-      )
-    ).toBe(true);
+    expect(checkSolutions(newSolutions([["_x", "for.all[v,v]"]]), newSolutions([["_x", "for.all[m,m]"]]))).toBe(true);
 
     // Test different orderings case
-    expect(
-      checkSolutions(
-        newSolutions([["_x", "a"]], [["_y", "b"]]),
-        newSolutions([["_y", "b"]], [["_x", "a"]])
-      )
-    ).toBe(true);
+    expect(checkSolutions(newSolutions([["_x", "a"]], [["_y", "b"]]), newSolutions([["_y", "b"]], [["_x", "a"]]))).toBe(
+      true,
+    );
   });
 });
 
@@ -67,18 +52,14 @@ describe("Expression Function Creators", () => {
 
     expect(e1.type).toBe("a");
     expect(nv1.type).toBe("v");
-    expect(
-      M.makeConstantExpression(nv1, e1).equals(ef("v1", "pl.us(41,1)"))
-    ).toBe(true);
+    expect(M.makeConstantExpression(nv1, e1).equals(ef("v1", "pl.us(41,1)"))).toBe(true);
 
     var e2 = quick("pl.us(a,b,c,d)");
     var nv2 = quick("_X");
     expect(e2.type).toBe("a");
     expect(nv2.type).toBe("v");
     expect(M.isMetavariable(nv2)).toBe(true);
-    expect(
-      M.makeConstantExpression(nv2, e2).equals(ef("_X", "pl.us(a,b,c,d)"))
-    ).toBe(true);
+    expect(M.makeConstantExpression(nv2, e2).equals(ef("_X", "pl.us(a,b,c,d)"))).toBe(true);
 
     expect(M.makeConstantExpression("v1", "pl.us(a,b)")).toBeNull();
   });
@@ -117,9 +98,9 @@ describe("Expression Function Creators", () => {
     expect(
       imit.equals(
         quick(
-          "SecondOrderMatching.gEF[v1,v2,v3,SecondOrderMatching.gEFA(_H1,v1,v2,v3)(SecondOrderMatching.gEFA(_H2,v1,v2,v3),SecondOrderMatching.gEFA(_H3,v1,v2,v3))]"
-        )
-      )
+          "SecondOrderMatching.gEF[v1,v2,v3,SecondOrderMatching.gEFA(_H1,v1,v2,v3)(SecondOrderMatching.gEFA(_H2,v1,v2,v3),SecondOrderMatching.gEFA(_H3,v1,v2,v3))]",
+        ),
+      ),
     ).toBe(true);
   });
 });

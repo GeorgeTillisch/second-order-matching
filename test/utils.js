@@ -86,9 +86,7 @@ export function efa(func, params) {
  * Converts a constraint (a single pair) to a string for debugging output.
  */
 export const CToString = (c) => {
-  return (
-    "( " + c.pattern.simpleEncode() + ", " + c.expression.simpleEncode() + " )"
-  );
+  return "( " + c.pattern.simpleEncode() + ", " + c.expression.simpleEncode() + " )";
 };
 
 /**
@@ -112,9 +110,7 @@ export const DEBUG_PRINT_CONSTRAINT = (c) => {
  * Print a constraint list to the console using CLToString if possible.
  */
 export const DEBUG_PRINT_CONSTRAINTLIST = (cl) => {
-  cl instanceof M.ConstraintList
-    ? console.log(CLToString(cl))
-    : console.log(cl);
+  cl instanceof M.ConstraintList ? console.log(CLToString(cl)) : console.log(cl);
 };
 
 /**
@@ -122,9 +118,7 @@ export const DEBUG_PRINT_CONSTRAINTLIST = (cl) => {
  * CLToString repeatedly if possible.
  */
 export const DEBUG_PRINT_SOLS = (sol) => {
-  sol instanceof Array
-    ? console.log("[\n" + sol.map((s) => CLToString(s)).join(",\n\n") + "\n]")
-    : console.log(sol);
+  sol instanceof Array ? console.log("[\n" + sol.map((s) => CLToString(s)).join(",\n\n") + "\n]") : console.log(sol);
 };
 
 /**
@@ -179,8 +173,8 @@ export const newSolutions = (...solutions) => {
       new M.ConstraintList(
         ...solution.map((pair) => {
           return new M.Constraint(quick(pair[0]), quick(pair[1]));
-        })
-      )
+        }),
+      ),
     );
   });
   return new_solutions;
@@ -202,8 +196,7 @@ export const checkSolutions = (actual_solutions, expected_solutions) => {
     if (
       !expected_solutions.some(
         (expected_solution) =>
-          actual_solution.length == expected_solution.length &&
-          actual_solution.equals(expected_solution)
+          actual_solution.length == expected_solution.length && actual_solution.equals(expected_solution),
       )
     ) {
       return false;
