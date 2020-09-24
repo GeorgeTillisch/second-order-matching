@@ -2,6 +2,7 @@
   "name": "second-order-matching",
   "version": "1.0.0",
   "description": "An implementation of the Huet-Lang algorithm for second-order pattern matching.",
+  "repository": "https://github.com/lurchmath/second-order-matching",
   "type": "module",
   "main": "built/matching.js",
   "types": "built/matching.d.ts",
@@ -11,8 +12,8 @@
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.14",
-    "jest": "^24.9.0",
-    "jsdoc": "^3.6.3",
+    "jest": "^26.4.2",
+    "jsdoc": "^3.6.6",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.0",
     "tslint": "^6.1.3",
