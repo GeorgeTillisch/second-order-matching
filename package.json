@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/second-order-matching.js",
-  "dependencies": {},
   "type": "module",
+  "dependencies": {
+    "openmath-js": "^1.2.3"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.6",

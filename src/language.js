@@ -9,7 +9,7 @@
 
 // TODO: handle the case of this module running in the browser
 // Import openmath-js for testing purposes
-import { OM } from "./openmath.js";
+import { OM } from "openmath-js";
 export { OM };
 
 ////////////////////////////////////////////////////////////////////////////////
