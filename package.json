@@ -13,12 +13,15 @@
     "esm": "^3.2.25",
     "jest": "^24.9.0",
     "jest-esm-transformer": "^1.0.0",
-    "jsdoc": "^3.6.3"
+    "jsdoc": "^3.6.3",
+    "prettier": "^2.1.2"
   },
   "scripts": {
     "test": "jest --verbose",
     "docs": "jsdoc --readme src/docs-main.md src/*.js -d ./docs",
-    "build": "babel src -d build"
+    "build": "babel src -d build",
+    "format": "prettier --write \"src/**/*.js\"",
+    "prepare": "npm run build && npm run docs"
   },
   "jest": {
     "testEnvironment": "node",
