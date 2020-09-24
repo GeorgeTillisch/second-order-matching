@@ -75,7 +75,7 @@ export function makeGeneralExpressionFunction(variables, body) {
     variables = [variables];
   }
   for (let i = 0; i < variables.length; i++) {
-    var variable = variables[i];
+    const variable = variables[i];
     if (variable.type !== "v") {
       throw "When making a general expression function,\
 all elements of first argument must have type variable";
@@ -99,7 +99,7 @@ export function isGeneralExpressionFunction(expression) {
  * In the case that F is a gEF, the expression function can be applied
  * to the argument see `applyGeneralExpressionFunctionApplication`.
  * @param {OM} func - either a gEF or something which can be instantiated as a gEF.
- * @param {OM[]} arguments - a list of OM expressions
+ * @param {OM[]} args - a list of OM expressions
  */
 export function makeGeneralExpressionFunctionApplication(func, args) {
   if (!(isGeneralExpressionFunction(func) || isMetavariable(func))) {
@@ -129,10 +129,7 @@ export function isGeneralExpressionFunctionApplication(expression) {
  * @param {OM} gEFA - a general expression function application
  */
 export function canApplyGeneralExpressionFunctionApplication(gEFA) {
-  if (isGeneralExpressionFunctionApplication(gEFA) && isGeneralExpressionFunction(gEFA.children[1])) {
-    return true;
-  }
-  return false;
+  return isGeneralExpressionFunctionApplication(gEFA) && isGeneralExpressionFunction(gEFA.children[1]);
 }
 
 /**
@@ -170,7 +167,7 @@ export function getNewVariableRelativeTo(expr /*, expr2, ... */) {
       index = Math.max(index, parseInt(next_var.name.slice(1)) + 1);
     }
   }
-  let var_name = "x" + index;
+  const var_name = "x" + index;
   return OM.var(var_name);
 }
 
@@ -184,15 +181,15 @@ export function getNewVariableRelativeTo(expr /*, expr2, ... */) {
  * @returns a copy of the alpha converted binding
  */
 export function alphaConvert(binding, which_var, replace_var) {
-  var result = binding.copy();
-  var bound_vars = result.variables;
+  const result = binding.copy();
+  const bound_vars = result.variables;
 
   if (!bound_vars.map((x) => x.name).includes(which_var.name)) {
     throw "which_var must be bound in binding";
   }
 
   for (let i = 0; i < bound_vars.length; i++) {
-    var variable = bound_vars[i];
+    let variable = bound_vars[i];
     if (variable.equals(which_var)) {
       variable.replaceWith(replace_var.copy());
     }
@@ -231,9 +228,9 @@ export function replaceWithoutCapture(expr, variable, replacement) {
       // children (of which there may be none, meaning this is some
       // type of atomic other than a variable, which is fine; do nothing)
     } else {
-      var children = expr.children;
+      const children = expr.children;
       for (let i = 0; i < children.length; i++) {
-        var ch = children[i];
+        const ch = children[i];
         replaceWithoutCapture(ch, variable, replacement);
       }
     }
@@ -286,7 +283,7 @@ export function replaceWithoutCapture(expr, variable, replacement) {
  * @returns true if the two expressions are alpha equivalent, false otherwise
  */
 export function alphaEquivalent(expr1, expr2, firstcall = true) {
-  var possible_types = ["a", "bi"];
+  const possible_types = ["a", "bi"];
   if (expr1.type !== expr2.type) {
     return false;
   }
@@ -294,14 +291,14 @@ export function alphaEquivalent(expr1, expr2, firstcall = true) {
     return false;
   }
   if (expr1.type === "a") {
-    var expr1_children = expr1.children;
-    var expr2_children = expr2.children;
+    const expr1_children = expr1.children;
+    const expr2_children = expr2.children;
     if (expr1_children.length !== expr2_children.length) {
       return false;
     }
     for (let i = 0; i < expr1_children.length; i++) {
-      var ch1 = expr1_children[i];
-      var ch2 = expr2_children[i];
+      const ch1 = expr1_children[i];
+      const ch2 = expr2_children[i];
       if (!alphaEquivalent(ch1, ch2, false)) {
         return false;
       }
@@ -314,8 +311,8 @@ export function alphaEquivalent(expr1, expr2, firstcall = true) {
     // Alpha convert all bound variables in both expressions to
     // new variables, which appear nowhere in either expression.
     // This avoids the problem of 'overwriting' a previous alpha conversion.
-    var expr1conv = expr1.copy();
-    var expr2conv = expr2.copy();
+    let expr1conv = expr1.copy();
+    let expr2conv = expr2.copy();
     for (let i = 0; i < expr1.variables.length; i++) {
       let new_var = getNewVariableRelativeTo(expr1conv, expr2conv);
       expr1conv = alphaConvert(expr1conv, expr1.variables[i], new_var);
@@ -351,11 +348,11 @@ export function betaReduce(gEF, expr_list) {
     throw "In beta reduction, the number of expressions must match number of variables";
   }
 
-  var variables = gEF.variables;
-  var result = gEF.body.copy();
+  const variables = gEF.variables;
+  const result = gEF.body.copy();
   for (let i = 0; i < expr_list.length; i++) {
-    var v_i = variables[i];
-    var e_i = expr_list[i];
+    const v_i = variables[i];
+    const e_i = expr_list[i];
     replaceWithoutCapture(result, v_i, e_i);
   }
   return result;
@@ -461,7 +458,7 @@ export function makeImitationExpression(variables, expr, temp_metavars) {
     }
   }
 
-  var imitationExpr = null;
+  let imitationExpr = null;
 
   if (variables.every((v) => v instanceof OM) && expr instanceof OM) {
     let type = expr.type;
