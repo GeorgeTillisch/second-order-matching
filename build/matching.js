@@ -395,7 +395,7 @@ var MatchingChallenge = /*#__PURE__*/function () {
       // const tab = '\t'
       var mc = this; // if needed, create a brand-new solution we will evolve with recursion
 
-      if (mc.solutions === undefined || mc.solutions.length == 0) mc.solutions = [new _constraints.ConstraintList()];
+      if (mc.solutions === undefined || mc.solutions.length === 0) mc.solutions = [new _constraints.ConstraintList()];
 
       function recur() {
         var _mc$challengeList;
@@ -406,7 +406,7 @@ var MatchingChallenge = /*#__PURE__*/function () {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                if (!(mc.challengeList.length == 0)) {
+                if (!(mc.challengeList.length === 0)) {
                   _context2.next = 4;
                   break;
                 }
@@ -459,7 +459,7 @@ var MatchingChallenge = /*#__PURE__*/function () {
                 // DEBUG( indent+'SIMPLIFICATION' )
                 mc.challengeList.remove(current_constraint); // Do any necessary alpha conversion before breaking into argument paits
 
-                if (current_constraint.pattern.type == 'bi' && current_constraint.expression.type == 'bi') {
+                if (current_constraint.pattern.type === "bi" && current_constraint.expression.type === "bi") {
                   pattern_vars = current_constraint.pattern.variables;
                   expression_vars = current_constraint.expression.variables; // Get case checks number of arguments
 
@@ -662,7 +662,7 @@ var MatchingChallenge = /*#__PURE__*/function () {
                 break;
 
               case 64:
-                if (!(expression.type == 'a' || expression.type == 'bi')) {
+                if (!(expression.type === "a" || expression.type === "bi")) {
                   _context2.next = 104;
                   break;
                 }
@@ -674,7 +674,7 @@ var MatchingChallenge = /*#__PURE__*/function () {
 
                 temp_metavars = [];
 
-                if (expression.type == 'a') {
+                if (expression.type === "a") {
                   temp_metavars = expression.children.map(function () {
                     var new_var = temp_mc_C.challengeList.nextNewVariable();
                     (0, _constraints.setMetavariable)(new_var);

@@ -194,7 +194,7 @@ var Constraint = /*#__PURE__*/function () {
     _classCallCheck(this, Constraint);
 
     if (!(pattern instanceof _language.OM) || !(expression instanceof _language.OM)) {
-      throw Error('Both arguments must be instances of OMNode');
+      throw Error("Both arguments must be instances of OMNode");
     }
 
     this.pattern = pattern;
@@ -245,7 +245,7 @@ var Constraint = /*#__PURE__*/function () {
         return CASES.IDENTITY;
       } else if ((0, _language.isMetavariable)(pattern)) {
         return CASES.BINDING;
-      } else if (pattern.type == 'a' && !(0, _language.isGeneralExpressionFunctionApplication)(pattern) && expression.type == 'a' && pattern.children.length == expression.children.length || pattern.type == 'bi' && expression.type == 'bi' && pattern.symbol.equals(expression.symbol) && pattern.variables.length == expression.variables.length) {
+      } else if (pattern.type === "a" && !(0, _language.isGeneralExpressionFunctionApplication)(pattern) && expression.type === "a" && pattern.children.length === expression.children.length || pattern.type === "bi" && expression.type === "bi" && pattern.symbol.equals(expression.symbol) && pattern.variables.length === expression.variables.length) {
         return CASES.SIMPLIFICATION;
       } else if ((0, _language.isGeneralExpressionFunctionApplication)(pattern) || (0, _language.isMetavariable)(pattern.children[1])) {
         return CASES.EFA;
@@ -293,14 +293,14 @@ var Constraint = /*#__PURE__*/function () {
     value: function breakIntoArgPairs() {
       var arg_pairs = [];
 
-      if (this.pattern.type == 'a' && this.expression.type == 'a') {
+      if (this.pattern.type === "a" && this.expression.type === "a") {
         var pattern_children = this.pattern.children;
         var expression_children = this.expression.children; // In getting the case, we checked that the length of children was the same
 
         for (var i = 0; i < pattern_children.length; i++) {
           arg_pairs.push(new Constraint(pattern_children[i].copy(), expression_children[i].copy()));
         }
-      } else if (this.pattern.type == 'bi' && this.expression.type == 'bi') {
+      } else if (this.pattern.type === "bi" && this.expression.type === "bi") {
         var pattern_vars = this.pattern.variables;
         var expression_vars = this.expression.variables;
         var pattern_body = this.pattern.body;
@@ -366,7 +366,7 @@ var ConstraintList = /*#__PURE__*/function () {
      * @returns a new variable starting at `vN` (see constructor for definition of `vN`).
      */
     value: function nextNewVariable() {
-      return _language.OM.simple('v' + this.nextNewVariableIndex++);
+      return _language.OM.simple("v" + this.nextNewVariableIndex++);
     }
     /**
      * @returns a deep copy of the list.
@@ -422,7 +422,7 @@ var ConstraintList = /*#__PURE__*/function () {
         // Don't add if it's already in the list
         if (_this2.indexAtWhich(function (c) {
           return c.equals(constraint);
-        }) == -1) {
+        }) === -1) {
           // Set the next new var index
           var p_vars = (0, _language.getVariablesIn)(constraint.pattern);
 
@@ -482,7 +482,7 @@ var ConstraintList = /*#__PURE__*/function () {
     key: "firstSatisfying",
     value: function firstSatisfying(predicate) {
       var index = this.indexAtWhich(predicate);
-      return index == -1 ? null : this.contents[index];
+      return index === -1 ? null : this.contents[index];
     }
     /**
      * @returns an array of length two containing the first two constraints satisfying the given binary predicate,
@@ -494,7 +494,7 @@ var ConstraintList = /*#__PURE__*/function () {
     value: function firstPairSatisfying(predicate) {
       for (var i = 0; i < this.contents.length; i++) {
         for (var j = 0; j < this.contents.length; j++) {
-          if (i != j) {
+          if (i !== j) {
             var constraint1 = this.contents[i];
             var constraint2 = this.contents[j];
 
@@ -519,23 +519,23 @@ var ConstraintList = /*#__PURE__*/function () {
       var constraint;
 
       if ((constraint = this.firstSatisfying(function (c) {
-        return c["case"] == CASES.FAILURE;
+        return c["case"] === CASES.FAILURE;
       })) != null) {
         return constraint;
       } else if ((constraint = this.firstSatisfying(function (c) {
-        return c["case"] == CASES.IDENTITY;
+        return c["case"] === CASES.IDENTITY;
       })) != null) {
         return constraint;
       } else if ((constraint = this.firstSatisfying(function (c) {
-        return c["case"] == CASES.BINDING;
+        return c["case"] === CASES.BINDING;
       })) != null) {
         return constraint;
       } else if ((constraint = this.firstSatisfying(function (c) {
-        return c["case"] == CASES.SIMPLIFICATION;
+        return c["case"] === CASES.SIMPLIFICATION;
       })) != null) {
         return constraint;
       } else if ((constraint = this.firstSatisfying(function (c) {
-        return c["case"] == CASES.EFA;
+        return c["case"] === CASES.EFA;
       })) != null) {
         return constraint;
       } else {
@@ -655,7 +655,7 @@ var ConstraintList = /*#__PURE__*/function () {
 
       this.contents.forEach(function (constraint) {
         return constraint.pattern.descendantsSatisfying(function (d) {
-          return d.type == 'bi';
+          return d.type === "bi";
         }).forEach(function (binding) {
           return binding.descendantsSatisfying(_language.isMetavariable).forEach(function (innerMV) {
             if (innerMV.isFree(binding)) {
