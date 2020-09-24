@@ -9,7 +9,9 @@
   "files": [
     "built/**/*"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "openmath-js": "^1.2.3"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.14",
     "jest": "^26.4.2",
