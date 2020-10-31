@@ -2,7 +2,7 @@
   "name": "second-order-matching",
   "version": "1.0.0",
   "description": "",
-  "main": "src/second-order-matching.js",
+  "main": "index.js",
   "dependencies": {},
   "type": "module",
   "devDependencies": {
