@@ -870,6 +870,52 @@ describe('The MatchingChallenge class (solving)', () => {
 
     });
 
+    test('TESTS FOR ND CHECKER', () => {
+        let constraints, mc, sols;
+
+        ////////// & INTRO //////////
+        constraints = newConstraints(
+            ['_x', 'P'],
+            ['_y', 'Q'],
+            ['fol.AND(_x,_y)', 'fol.AND(P,Q)'],
+        );
+        mc = newMC(constraints);
+        DEBUG_PRINT_CONSTRAINTLIST(mc.challengeList);
+        sols = mc.getSolutions();
+        DEBUG_PRINT_SOLS(sols);
+        expect(
+            checkSolutions(
+                sols,
+                newSolutions(
+                    [
+                        ['_x', 'P'],
+                        ['_y', 'Q'],
+                    ],
+                )
+            )
+        ).toBe(true);
+
+        ////////// Universal ELIM //////////
+        constraints = newConstraints(
+            ['fol.forall[_x,_P_of__x]', 'fol.forall[x,fol.imp(F(x),G(x))]'],
+            ['_P_of__t', 'fol.imp(F(a),G(a))'],
+        );
+        mc = newMC(constraints);
+        sols = mc.getSolutions();
+        expect(
+            checkSolutions(
+                sols,
+                newSolutions(
+                    [
+                        ['_x', 'x'],
+                        ['_t', 'a'],
+                        ['_P', lambdaString('v.fol.imp(F(v),G(v))')],
+                    ],
+                )
+            )
+        ).toBe(true);
+    })
+
     test('should correctly solve challenges involving the universal elimination rule', () => {
         var constraints, mc, sols;
 
