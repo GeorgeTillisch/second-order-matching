@@ -64,9 +64,12 @@ export class MatchingChallenge {
         this.solutions = [ ];//new ConstraintList();
         this.solvable = undefined;
 
-        for (let i = 0; i < constraints.length; i++) {
-            let constraint = constraints[i];
-            this.addConstraint(constraint[0], constraint[1]);
+        for (let [pattern, expr] of constraints) {
+            if (typeof pattern === "string" && typeof expr === "string") {
+                pattern = OM.decode(pattern);
+                expr = OM.decode(expr);
+            }
+            this.addConstraint(pattern, expr);
         }
     }
 
